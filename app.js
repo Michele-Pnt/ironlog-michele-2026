@@ -39,6 +39,24 @@ const uid = () => `x${Math.random().toString(36).slice(2, 9)}`;
 const ex = (name, sets, reps, rest, method = 'Classico', note = '') => ({ id: uid(), name, sets, reps, rest, method, note });
 const pair = (name, left, right, sets, reps, rest, note = '') => ({ id: uid(), name, sets, reps, rest, method: 'Superset', note, pair: [left, right] });
 
+const cutTrainingProgram = () => ({
+  id: 'cut-4-split', name: 'Cut - 4 Split', duration: 'Fase attuale', workouts: [
+    { id: 'A', title: 'Upper - Panca + Dorso', warmup: 'Riscaldamento e avvicinamento progressivo ai fondamentali', exercises: [
+      ex('Panca Piana Bilanciere', 3, '5-7 + 6-8', '2′30″-4′', 'Top set + Back off', 'Top set RIR 1 + 2 back-off RIR 1-2'), ex('Rematore', 3, '6-8 + 8-10', '2′30″-4′', 'Top set + Back off', 'Progressive overload'), ex('Distensioni Manubri Inclinata', 2, '8-12', '90″-2′'), ex('Iliac Pulldown Unilaterale', 2, '10-15', '90″', 'Classico', 'Controllo e allungamento'), ex('Alzate Laterali Cavo', 3, '12-20', '60″-90″', 'Cluster', 'Cluster opzionale'), ex('Curl Scott', 2, '8-12', '60″-90″'), ex('Hammer Curl / Cavo', 2, '12-15', '60″-90″'),
+    ] },
+    { id: 'B', title: 'Lower - Quadricipiti', warmup: 'Riscaldamento anche, ginocchia e serie di avvicinamento', exercises: [
+      ex('Leg Extension', 3, '10-15', '60″-90″', 'Classico', 'Ultima serie RIR 0-1'), ex('Hip Belt Squat', 3, '8-10 + 10-12', '2′30″-4′', 'Top set + Back off'), ex('Leg Press 45°', 2, '10-12 + 12-15', '90″-2′', 'Top set + Back off'), ex('Sissy Squat', 2, '15-20', '60″-90″', 'Classico', 'Controllo'), ex('Leg Curl Seduto', 3, '8-12', '60″-90″', 'Classico', 'Progressione'), ex('Calf Raise', 4, '8-12', '60″-90″', 'Classico', 'Pausa e ROM completo'), ex('Crunch Cavo', 3, '12-20', '60″-90″', 'Classico', 'Progressione'),
+    ] },
+    { id: 'C', title: 'Upper - Trazioni + Dip', warmup: 'Riscaldamento spalle/scapole e serie di avvicinamento', exercises: [
+      ex('Trazioni', 3, '5-8', '2′30″-4′', 'Classico', 'RIR 1-2; zavorra dopo 8/8/8 pulite'), ex('Dip', 3, '6-8 + 8-10', '2′30″-4′', 'Top set + Back off', 'Zavorra se necessaria'), ex('Chest-Supported Row / Dorsy Bar', 2, '8-12', '90″-2′'), ex('Lento Smith', 2, '8-10', '90″-2′', 'Classico', 'RIR 1-2'), ex('Alzate Laterali', 3, '12-20', '60″-90″', 'Cluster', 'Cluster opzionale'), ex('Reverse Cross', 2, '15-20', '60″-90″'), ex('French Press Cavo', 3, '10-15', '60″-90″'),
+    ] },
+    { id: 'D', title: 'Lower Femorali + Richiamo Upper', warmup: 'Riscaldamento anche, femorali e serie di avvicinamento', exercises: [
+      ex('Romanian Deadlift', 3, '6-8 + 8-10', '2′30″-4′', 'Top set + Back off'), ex('Leg Curl Seduto', 3, '8-12', '60″-90″', 'Cluster', 'Cluster opzionale in blocchi futuri'), ex('Bulgarian Split Squat / Pressa', 2, '8-12', '90″-2′'), ex('Calf', 3, '10-15', '60″-90″'), ex('Panca Piana Tecnica', 3, '6-8', '2′30″-4′', 'Classico', 'RIR ~3'), ex('Pulley / Low Row', 2, '10-15', '90″-2′'), pair('Bicipiti + Tricipiti', 'Bicipiti', 'Tricipiti', 2, '10-15 ciascuno', '60″-90″', 'Superset opzionale'),
+    ] },
+  ],
+});
+globalThis.IronlogLogic.cutTrainingProgram = cutTrainingProgram();
+
 const initialProgram = () => ({
   id: 'mesociclo-2', name: '2° Mesociclo - 5 Split', duration: '10-12 settimane', workouts: [
     { id: 'A', title: 'Pettorali, Spalle e Braccia', warmup: '10′: tapis roulant, mobilità bacino/ginocchia, foam roller', exercises: [
@@ -64,10 +82,17 @@ const initialProgram = () => ({
   ],
 });
 
-const defaultState = () => ({ programs: [initialProgram()], activeProgramId: 'mesociclo-2', activeWorkoutId: 'A', selectedDate: new Date().toISOString().slice(0, 10), logs: [], view: 'train' });
+const defaultState = () => ({ programs: [cutTrainingProgram()], activeProgramId: 'cut-4-split', activeWorkoutId: 'A', selectedDate: new Date().toISOString().slice(0, 10), logs: [], view: 'train', cut4MigrationDone: true });
 let state;
 try { state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState(); } catch { state = defaultState(); }
 const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+if (!state.cut4MigrationDone) {
+  const oldIndex = state.programs.findIndex((program) => program.id === 'mesociclo-2');
+  const hasOldLogs = state.logs.length > 0;
+  if (oldIndex >= 0 && hasOldLogs) state.programs[oldIndex].name = 'Archivio - 2° Mesociclo 5 Split';
+  if (oldIndex >= 0 && !hasOldLogs) state.programs.splice(oldIndex, 1);
+  state.programs.unshift(cutTrainingProgram()); state.activeProgramId = 'cut-4-split'; state.activeWorkoutId = 'A'; state.cut4MigrationDone = true; save();
+}
 const activeProgram = () => state.programs.find((p) => p.id === state.activeProgramId) ?? state.programs[0];
 const activeWorkout = () => activeProgram().workouts.find((w) => w.id === state.activeWorkoutId) ?? activeProgram().workouts[0];
 const $ = (sel) => document.querySelector(sel);
