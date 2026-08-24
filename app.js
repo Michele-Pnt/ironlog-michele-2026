@@ -108,13 +108,27 @@ function updateLog(exerciseId, setIndex, field, value) {
 
 function renderTrain() {
   const workout = activeWorkout();
-  $('#content').innerHTML = `<section class="workout-head"><div><p class="eyebrow">${esc(activeProgram().name)}</p><h1><span>${workout.id}</span>${esc(workout.title)}</h1></div><label class="date-label">Data<input id="session-date" type="date" value="${state.selectedDate}"></label></section>
+  const program = activeProgram();
+  $('#content').innerHTML = `<section class="workout-head"><div><p class="eyebrow">${esc(program.name)}</p><h1><span>${workout.id}</span>${esc(workout.title)}</h1></div>
+    <div style="display: flex; gap: 10px;">
+      <label class="select-label">Scheda
+        <select id="workout-select">
+          ${program.workouts.map(w => `<option value="${w.id}" ${w.id === state.activeWorkoutId ? 'selected' : ''}>${w.id}</option>`).join('')}
+        </select>
+      </label>
+      <label class="date-label">Data<input id="session-date" type="date" value="${state.selectedDate}"></label>
+    </div>
+    </section>
     <p class="warmup">◎ ${esc(workout.warmup)}</p><div class="tip">Ogni campo mostra in trasparenza la serie dell’ultimo allenamento. Tocca “Riprendi” per copiarla tutta e correggere solo ciò che cambia.</div>
     <div class="exercise-list">${workout.exercises.map((exercise, idx) => exerciseCard(exercise, idx)).join('')}</div>`;
+  
+  $('#workout-select').onchange = (e) => { state.activeWorkoutId = e.target.value; save(); renderTrain(); };
   $('#session-date').onchange = (e) => { state.selectedDate = e.target.value; save(); renderTrain(); };
   document.querySelectorAll('[data-copy]').forEach((button) => button.onclick = () => copyPrevious(button.dataset.copy));
   document.querySelectorAll('[data-log]').forEach((input) => input.onchange = () => updateLog(input.dataset.ex, Number(input.dataset.set), input.dataset.log, input.value));
 }
+
+
 
 function exerciseCard(exercise, index) {
   const rows = [...Array(Number(exercise.sets) || 1)].map((_, setIndex) => {
