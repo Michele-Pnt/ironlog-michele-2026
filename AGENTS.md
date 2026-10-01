@@ -17,6 +17,8 @@ Questo file è l'indice principale per chi lavora sul progetto. Prima di modific
 - `style.css` — stile responsive mobile-first.
 - `README.md` — istruzioni d'uso e note di distribuzione.
 - `docs/coach-evidence-base.md` — bibliografia scientifica e criteri per allenamento/alimentazione.
+- `tests/checkin-logic.test.js` — test di migrazione, normalizzazione e export del check-in.
+- `app-logic.mjs` — funzioni pure per schema locale, check-in e riepilogo condivisibile.
 
 ## Dati dell'utente
 
@@ -41,7 +43,7 @@ Questo file è l'indice principale per chi lavora sul progetto. Prima di modific
 
 - Remote GitHub: `https://github.com/Michele-Pnt/ironlog-michele-2026.git`
 - Branch principale remota: `main`.
-- Deploy previsto: GitHub Pages con workflow automatico, da introdurre dopo approvazione del design tecnico.
+- Deploy: GitHub Pages con workflow automatico `.github/workflows/deploy.yml` su push a `main`.
 
 ## Criteri di lavoro
 

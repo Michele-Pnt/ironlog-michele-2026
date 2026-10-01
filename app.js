@@ -1,3 +1,5 @@
+import { normalizeState, normalizeCheckIn, upsertCheckIn, buildWeeklySummary, serializeCheckInForShare, validateCheckIn } from './app-logic.mjs';
+
 const STORAGE_KEY = 'ironlog-local-v1';
 
 const makeSetLog = (date, workoutId, exerciseId, setIndex, weight, reps) => ({
@@ -33,7 +35,7 @@ const nutritionCut = {
   adjustment: 'Mantieni la base per 10-14 giorni e guarda la media peso di 7 giorni. Target: -0,2/-0,4 kg a settimana. Se fermo per 10-14 giorni: -100 kcal/die o più attività. Se il calo è troppo rapido e peggiorano recupero/performance: +100-150 kcal/die.',
 };
 
-globalThis.IronlogLogic = { makeSetLog, previousSet, chartPoints, nutritionCut };
+globalThis.IronlogLogic = { makeSetLog, previousSet, chartPoints, nutritionCut, normalizeState, normalizeCheckIn, upsertCheckIn, buildWeeklySummary, serializeCheckInForShare, validateCheckIn };
 
 const uid = () => `x${Math.random().toString(36).slice(2, 9)}`;
 const ex = (name, sets, reps, rest, method = 'Classico', note = '') => ({ id: uid(), name, sets, reps, rest, method, note });
@@ -82,9 +84,9 @@ const initialProgram = () => ({
   ],
 });
 
-const defaultState = () => ({ programs: [cutTrainingProgram()], activeProgramId: 'cut-4-split', activeWorkoutId: 'A', selectedDate: new Date().toISOString().slice(0, 10), logs: [], view: 'train', cut4MigrationDone: true });
+const defaultState = () => ({ programs: [cutTrainingProgram()], activeProgramId: 'cut-4-split', activeWorkoutId: 'A', selectedDate: new Date().toISOString().slice(0, 10), logs: [], checkIns: [], view: 'train', cut4MigrationDone: true });
 let state;
-try { state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState(); } catch { state = defaultState(); }
+try { state = normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState()); } catch { state = defaultState(); }
 const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 if (!state.cut4MigrationDone) {
   const oldIndex = state.programs.findIndex((program) => program.id === 'mesociclo-2');
@@ -166,6 +168,60 @@ function drawChart(points) {
   return `<svg viewBox="0 0 ${width} ${height}" class="chart" role="img" aria-label="Grafico peso"><line x1="${pad}" x2="${width-pad}" y1="${height-pad}" y2="${height-pad}"/><path d="M ${coords.map((p) => `${p.x},${p.y}`).join(' L ')}"/><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#FF804A"/><stop offset="1" stop-color="#FFD06E"/></linearGradient></defs>${coords.map((p) => `<circle cx="${p.x}" cy="${p.y}" r="5"><title>${p.date}: ${p.weight} kg × ${p.reps}</title></circle><text x="${p.x}" y="${p.y - 12}">${p.weight}</text>`).join('')}</svg>`;
 }
 
+function isoWeekKey(date = new Date()) {
+  const day = new Date(date); day.setHours(0, 0, 0, 0); day.setDate(day.getDate() + 4 - (day.getDay() || 7));
+  const yearStart = new Date(day.getFullYear(), 0, 1); const week = Math.ceil((((day - yearStart) / 86400000) + 1) / 7);
+  return `${day.getFullYear()}-W${String(week).padStart(2, '0')}`;
+}
+
+const checkinFields = [
+  ['averageWeight', 'Peso medio 7 giorni', 'number', '0.01', 'kg'], ['minimumWeight', 'Peso minimo', 'number', '0.01', 'kg'], ['maximumWeight', 'Peso massimo', 'number', '0.01', 'kg'], ['bodyFat', 'Body fat', 'number', '0.1', '%'],
+  ['calories', 'Calorie medie', 'number', '1', 'kcal'], ['protein', 'Proteine medie', 'number', '1', 'g'], ['carbs', 'Carboidrati medi', 'number', '1', 'g'], ['fat', 'Grassi medi', 'number', '1', 'g'],
+  ['completedWorkouts', 'Allenamenti completati', 'number', '1', ''], ['plannedWorkouts', 'Allenamenti previsti', 'number', '1', ''], ['steps', 'Passi medi', 'number', '1', ''], ['cardioMinutes', 'Cardio', 'number', '1', 'min'], ['sleepHours', 'Sonno medio', 'number', '0.1', 'h'],
+];
+
+function inputField([name, label, type, step, suffix], value = '') {
+  return `<label class="checkin-field"><span>${label}${suffix ? ` <em>${suffix}</em>` : ''}</span><input name="${name}" type="${type}" inputmode="decimal" step="${step}" min="0" value="${value ?? ''}"></label>`;
+}
+
+function selectField(name, label, options, value = '') {
+  return `<label class="checkin-field"><span>${label}</span><select name="${name}"><option value="">—</option>${options.map(([key, text]) => `<option value="${key}" ${String(key) === String(value) ? 'selected' : ''}>${text}</option>`).join('')}</select></label>`;
+}
+
+function renderCheckin() {
+  const weekKey = $('#checkin-week')?.value || isoWeekKey(); const existing = state.checkIns.find((item) => item.weekKey === weekKey) || {};
+  $('#content').innerHTML = `<section class="page-head checkin-head"><p class="eyebrow">MONITORAGGIO</p><h1>Check-in settimanale</h1><p>Compilalo una volta a settimana: il riepilogo è pronto da copiare in chat.</p></section>
+    <form id="checkin-form" class="checkin-card"><div class="checkin-toolbar"><label class="select-label">Settimana<input id="checkin-week" name="weekKey" type="week" value="${esc(weekKey)}"></label><span class="checkin-hint">Dati locali</span></div>
+    <h2>Trend corporeo</h2><div class="checkin-grid">${checkinFields.map((field) => inputField(field, existing[field[0]])).join('')}</div>
+    <h2>Attività e recupero</h2><div class="checkin-grid">${inputField(['cardioType', 'Tipo cardio', 'text', '1', ''])}${selectField('performance', 'Performance', [['peggiorata', 'Peggiorata'], ['stabile', 'Stabile'], ['migliorata', 'Migliorata']], existing.performance)}${selectField('hunger', 'Fame', [['1', '1 — bassa'], ['2', '2'], ['3', '3 — media'], ['4', '4'], ['5', '5 — alta']], existing.hunger)}${selectField('stress', 'Stress', [['1', '1 — basso'], ['2', '2'], ['3', '3 — medio'], ['4', '4'], ['5', '5 — alto']], existing.stress)}${selectField('recovery', 'Recupero', [['1', '1 — scarso'], ['2', '2'], ['3', '3 — medio'], ['4', '4'], ['5', '5 — ottimo']], existing.recovery)}</div>
+    <label class="checkin-wide"><span>Sintomi, dolori o segnali da segnalare</span><textarea name="symptoms" rows="2">${esc(existing.symptoms || '')}</textarea></label><label class="checkin-wide"><span>Note della settimana</span><textarea name="notes" rows="3">${esc(existing.notes || '')}</textarea></label><p id="checkin-error" class="form-error" role="alert"></p><button class="primary checkin-save" type="button">Salva check-in</button></form>
+    <section class="checkin-actions"><button class="primary" id="share-checkin">Condividi su iPhone</button><button class="secondary" id="copy-checkin">Copia testo</button><button class="secondary" id="download-checkin">Scarica .txt</button><button class="secondary" id="export-full-backup">Esporta backup completo</button></section>
+    <section class="checkin-history"><h2>Storico recente</h2>${state.checkIns.slice(0, 8).map((item) => `<button class="history-row" data-week="${esc(item.weekKey)}"><b>${esc(item.weekKey)}</b><span>${item.averageWeight ?? '—'} kg</span><span>${item.bodyFat ?? '—'}%</span><span>${item.calories ?? '—'} kcal</span></button>`).join('') || '<p class="muted">Nessun check-in salvato.</p>'}</section>`;
+  $('#checkin-week').onchange = renderCheckin;
+  $('#checkin-form').onsubmit = (event) => { event.preventDefault(); saveCheckInFromForm(event.currentTarget); };
+  $('.checkin-save').onclick = () => saveCheckInFromForm($('#checkin-form'));
+  document.querySelectorAll('[data-week]').forEach((button) => button.onclick = () => { $('#checkin-week').value = button.dataset.week; renderCheckin(); });
+  $('#share-checkin').onclick = () => exportWeeklyCheckIn(weekKey, 'share'); $('#copy-checkin').onclick = () => exportWeeklyCheckIn(weekKey, 'clipboard'); $('#download-checkin').onclick = () => exportWeeklyCheckIn(weekKey, 'download'); $('#export-full-backup').onclick = exportData;
+}
+
+function readCheckInForm(form) { return Object.fromEntries(new FormData(form).entries()); }
+
+function saveCheckInFromForm(form) {
+  const error = $('#checkin-error');
+  try {
+    const input = readCheckInForm(form); const errors = validateCheckIn(input);
+    if (Object.keys(errors).length) { error.textContent = Object.values(errors)[0]; return; }
+    state.checkIns = upsertCheckIn(state.checkIns, input); save(); renderCheckin();
+  } catch (exception) { error.textContent = `Errore salvataggio: ${exception.message}`; }
+}
+
+async function exportWeeklyCheckIn(weekKey, mode) {
+  const text = serializeCheckInForShare(buildWeeklySummary(state, weekKey));
+  if (mode === 'share' && navigator.share) { await navigator.share({ title: 'Ironlog check-in', text }); return; }
+  if (mode === 'clipboard' && navigator.clipboard) { await navigator.clipboard.writeText(text); alert('Check-in copiato. Incollalo in chat.'); return; }
+  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' }); const anchor = document.createElement('a'); anchor.href = URL.createObjectURL(blob); anchor.download = `ironlog-checkin-${weekKey}.txt`; anchor.click(); URL.revokeObjectURL(anchor.href);
+}
+
 function renderManage() {
   const program = activeProgram();
   $('#content').innerHTML = `<section class="page-head"><p class="eyebrow">EDITOR</p><h1>Le tue schede</h1><p>Modifica senza perdere il tuo logbook.</p></section><div class="program-actions"><button class="primary" id="new-program">+ Nuovo programma</button><button class="secondary" id="export-data">Esporta backup</button><label class="secondary import">Importa<input type="file" accept="application/json" id="import-data"></label></div>${program.workouts.map((workout) => `<article class="manage-workout"><header><div><span class="workout-letter">${workout.id}</span><input class="workout-title" data-workout-title="${workout.id}" value="${esc(workout.title)}"></div><button class="add-exercise" data-add-exercise="${workout.id}">+ esercizio</button></header>${workout.exercises.map((e) => `<div class="edit-exercise"><input data-edit="name" data-w="${workout.id}" data-e="${e.id}" value="${esc(e.name)}"><input data-edit="sets" data-w="${workout.id}" data-e="${e.id}" type="number" min="1" value="${e.sets}" aria-label="Serie"><input data-edit="reps" data-w="${workout.id}" data-e="${e.id}" value="${esc(e.reps)}" aria-label="Ripetizioni"><select data-edit="method" data-w="${workout.id}" data-e="${e.id}">${['Classico','Top set + Back off -20%','Ramping','Cluster','Superset','Compound set','Metabolico','Rest pause'].map((m) => `<option ${m === e.method ? 'selected' : ''}>${m}</option>`).join('')}</select><input data-edit="rest" data-w="${workout.id}" data-e="${e.id}" value="${esc(e.rest)}" aria-label="Recupero"><button data-delete="${e.id}" data-w="${workout.id}" aria-label="Elimina ${esc(e.name)}">×</button></div>`).join('')}</article>`).join('')}`;
@@ -180,6 +236,6 @@ function editExercise(e) { const el = e.target; const exercise = activeProgram()
 function newProgram() { const clone = JSON.parse(JSON.stringify(activeProgram())); clone.id = uid(); clone.name = `Nuovo programma ${state.programs.length + 1}`; clone.workouts = clone.workouts.map((w, i) => ({ ...w, id: String.fromCharCode(65 + i), exercises: w.exercises.map((e) => ({ ...e, id: uid() })) })); state.programs.push(clone); state.activeProgramId = clone.id; state.activeWorkoutId = clone.workouts[0].id; save(); renderManage(); }
 function exportData() { const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `ironlog-backup-${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(a.href); }
 function importData(e) { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => { try { state = JSON.parse(reader.result); save(); render(); } catch { alert('Backup non valido.'); } }; reader.readAsText(file); }
-function render() { document.querySelectorAll('[data-nav]').forEach((button) => button.classList.toggle('active', button.dataset.nav === state.view)); if (state.view === 'train') renderTrain(); else if (state.view === 'progress') renderProgress(); else if (state.view === 'nutrition') renderNutrition(); else renderManage(); }
+function render() { document.querySelectorAll('[data-nav]').forEach((button) => button.classList.toggle('active', button.dataset.nav === state.view)); if (state.view === 'train') renderTrain(); else if (state.view === 'progress') renderProgress(); else if (state.view === 'nutrition') renderNutrition(); else if (state.view === 'checkin') renderCheckin(); else renderManage(); }
 function boot() { document.querySelectorAll('[data-nav]').forEach((button) => button.onclick = () => { state.view = button.dataset.nav; save(); render(); }); render(); }
 if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', boot);
