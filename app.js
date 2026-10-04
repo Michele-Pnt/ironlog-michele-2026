@@ -80,6 +80,27 @@ const fiveDayTrainingProgram = () => ({
 });
 globalThis.IronlogLogic.fiveDayTrainingProgram = fiveDayTrainingProgram();
 
+const pplUpperLowerProgram = () => ({
+  id: 'bulk-ppl-ul', name: 'Bulk controllato - Push Pull Legs Upper Lower', duration: 'Fase attuale · lun-mar-mer-ven-sab', workouts: [
+    { id: 'A', title: 'Push - Petto alto, Spalle, Tricipiti', warmup: 'Riscaldamento spalle e serie di avvicinamento alla panca inclinata', exercises: [
+      ex('Panca Inclinata Smith 30°', 3, '5-7 + 8-10', '2′30″-4′', 'Top set + Back off -20%', 'Priorità parte alta del petto; top set RIR 1'), ex('Distensioni Manubri Panca Inclinata', 3, '8-12', '90″-2′', 'Classico', 'Allungamento controllato e ROM completo'), ex('Croci Cavo basso-alto', 2, '10-15', '60″-90″', 'Classico', 'Linea di spinta verso la parte alta del petto'), ex('Shoulder Press Manubri / Smith', 3, '6-10', '2′-3′', 'Top set + Back off -20%', 'RIR 1-2, niente compensi lombari'), ex('Alzate Laterali Macchina', 4, '12-20', '60″-90″'), ex('Estensioni Tricipiti sopra la testa al Cavo', 3, '10-15', '60″-90″'), ex('Push Down Corda', 3, '12-20', '60″-90″'),
+    ] },
+    { id: 'B', title: 'Pull - Gran dorsale, Centro schiena, Bicipiti', warmup: 'Riscaldamento scapole e serie di avvicinamento alle trazioni', exercises: [
+      ex('Trazioni Zavorrate', 3, '5-8', '2′30″-4′', 'Classico', 'Gran dorsale; aumenta la zavorra dopo 8/8/8 pulite'), ex('Rematore Chest-Supported', 3, '6-10', '2′-3′', 'Top set + Back off -20%', 'Centro schiena senza caricare inutilmente la zona lombare'), ex('Lat Pulldown Unilaterale', 3, '8-12', '90″-2′', 'Classico', 'Gran dorsale e depressione scapolare'), ex('Cable Row Presa Larga', 2, '10-15', '90″', 'Classico', 'Centro schiena e retrazione scapolare'), ex('Reverse Cross / Rear Delt Row', 3, '12-20', '60″-90″'), ex('Curl Scott', 3, '8-12', '60″-90″'), ex('Curl Inclinato Manubri', 3, '10-15', '60″-90″'),
+    ] },
+    { id: 'C', title: 'Legs - Focus Quadricipiti', warmup: 'Riscaldamento anche, ginocchia e serie di avvicinamento', exercises: [
+      ex('Leg Extension', 3, '10-15', '60″-90″', 'Ramping', 'Ultima serie a cedimento tecnico'), ex('Leg Press 45°', 3, '8-12', '2′-3′', 'Top set + Back off -20%'), ex('Hack Squat / Belt Squat', 3, '6-10', '2′-3′', 'Classico', 'RIR 1-2'), ex('Bulgarian Split Squat', 2, '8-12', '90″-2′'), ex('Leg Curl Seduto', 2, '10-15', '60″-90″', 'Classico', 'Volume di mantenimento femorali'), ex('Calf Raise', 3, '8-12', '60″-90″', 'Classico', 'Totale settimanale: 3 serie'), ex('Crunch Cavo', 3, '12-20', '60″-90″'),
+    ] },
+    { id: 'D', title: 'Upper - Specializzazione Spalle + Braccia', warmup: 'Riscaldamento cuffia, scapole e serie di avvicinamento', exercises: [
+      ex('Shoulder Press Manubri / Smith', 3, '6-10', '2′-3′', 'Top set + Back off -20%', 'RIR 1-2, niente compensi lombari'), ex('Alzate Laterali Macchina', 4, '12-20', '60″-90″'), ex('Alzate Laterali Cavo Unilaterali', 3, '15-25', '60″-90″', 'Cluster'), ex('Reverse Cross / Rear Delt Row', 3, '15-20', '60″-90″'), ex('Panca Inclinata Manubri', 3, '8-12', '2′-3′', 'Classico', 'Richiamo parte alta del petto'), ex('Rematore Chest-Supported', 2, '10-15', '90″', 'Classico', 'Richiamo centro schiena'), ex('Curl Inclinato Manubri', 3, '8-12', '60″-90″'), ex('Curl Scott Machine', 3, '10-15', '60″-90″'), ex('Estensioni Tricipiti sopra la testa al Cavo', 3, '10-15', '60″-90″'), ex('Push Down Corda', 3, '12-20', '60″-90″'),
+    ] },
+    { id: 'E', title: 'Lower - Femorali + Erettori lombari', warmup: 'Riscaldamento anche, femorali e serie di avvicinamento', exercises: [
+      ex('Romanian Deadlift', 3, '6-8 + 8-10', '2′30″-4′', 'Top set + Back off -20%', 'Femorali + erettori lombari; schiena neutra'), ex('Leg Curl Seduto', 4, '8-12', '60″-90″', 'Cluster', 'Femorali; cluster opzionale nell’ultima serie'), ex('Leg Curl Prono', 3, '10-15', '60″-90″'), ex('Glute Ham Raise / Nordic Assistito', 2, '6-10', '90″-2′'), ex('Back Extension 45°', 3, '10-15', '90″', 'Classico', 'Erettori lombari + femorali, senza iperestendere'), ex('Ab Wheel / Crunch', 3, '8-15', '60″-90″'),
+    ] },
+  ],
+});
+globalThis.IronlogLogic.pplUpperLowerProgram = pplUpperLowerProgram();
+
 const initialProgram = () => ({
   id: 'mesociclo-2', name: '2° Mesociclo - 5 Split', duration: '10-12 settimane', workouts: [
     { id: 'A', title: 'Pettorali, Spalle e Braccia', warmup: '10′: tapis roulant, mobilità bacino/ginocchia, foam roller', exercises: [
@@ -105,7 +126,7 @@ const initialProgram = () => ({
   ],
 });
 
-const defaultState = () => ({ programs: [fiveDayTrainingProgram(), cutTrainingProgram()], activeProgramId: 'bulk-5-split', activeWorkoutId: 'A', selectedDate: new Date().toISOString().slice(0, 10), logs: [], checkIns: [], view: 'train', cut4MigrationDone: true, bulk5MigrationDone: true, balanced5MigrationDone: true });
+const defaultState = () => ({ programs: [pplUpperLowerProgram(), fiveDayTrainingProgram(), cutTrainingProgram()], activeProgramId: 'bulk-ppl-ul', activeWorkoutId: 'A', selectedDate: new Date().toISOString().slice(0, 10), logs: [], checkIns: [], view: 'train', cut4MigrationDone: true, bulk5MigrationDone: true, balanced5MigrationDone: true, pplMigrationDone: true });
 let state;
 try { state = normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState()); } catch { state = defaultState(); }
 const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -124,6 +145,12 @@ if (!state.balanced5MigrationDone) {
   const previousFiveDay = state.programs.find((program) => program.id === 'bulk-5-split');
   if (previousFiveDay) { previousFiveDay.id = 'bulk-5-split-v1'; previousFiveDay.name = 'Archivio - Bulk controllato v1'; }
   state.programs.unshift(fiveDayTrainingProgram()); state.activeProgramId = 'bulk-5-split'; state.activeWorkoutId = 'A'; state.balanced5MigrationDone = true; save();
+}
+if (!state.pplMigrationDone) {
+  const previousActive = state.programs.find((program) => program.id === 'bulk-5-split');
+  if (previousActive) previousActive.name = 'Archivio - 5 giorni Upper/Lower';
+  if (!state.programs.some((program) => program.id === 'bulk-ppl-ul')) state.programs.unshift(pplUpperLowerProgram());
+  state.activeProgramId = 'bulk-ppl-ul'; state.activeWorkoutId = 'A'; state.pplMigrationDone = true; save();
 }
 const activeProgram = () => state.programs.find((p) => p.id === state.activeProgramId) ?? state.programs[0];
 const activeWorkout = () => activeProgram().workouts.find((w) => w.id === state.activeWorkoutId) ?? activeProgram().workouts[0];
