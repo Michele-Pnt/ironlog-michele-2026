@@ -20,6 +20,8 @@ Premi **Salva check-in**. Viene mantenuto un solo record per settimana e i dati 
 
 Il deploy GitHub Pages pubblica soltanto i file dell’app: non contiene né sovrascrive il localStorage del telefono. Prima di cambiare dispositivo o browser, esporta il backup JSON e conservalo in File/iCloud Drive; l’importazione del backup resta disponibile nel tab **Schede**.
 
+La scheda attiva è **Bulk controllato - 5 giorni**: A upper forza panca/dorso, B lower quadricipiti, C upper forza trazioni/dip, D lower femorali, E upper con specializzazione spalle/braccia. La vecchia scheda resta selezionabile nell’editor e i suoi log non vengono cancellati.
+
 ## Deploy
 
 Ogni push su `main` avvia il workflow GitHub Pages in `.github/workflows/deploy.yml`. Dopo il primo run, abilita GitHub Pages nelle impostazioni del repository scegliendo **GitHub Actions** come sorgente, se GitHub non lo ha già configurato automaticamente.

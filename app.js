@@ -59,6 +59,27 @@ const cutTrainingProgram = () => ({
 });
 globalThis.IronlogLogic.cutTrainingProgram = cutTrainingProgram();
 
+const fiveDayTrainingProgram = () => ({
+  id: 'bulk-5-split', name: 'Bulk controllato - 5 giorni', duration: 'Fase attuale · lun-mar-mer-ven-sab', workouts: [
+    { id: 'A', title: 'Upper forza - Panca + Dorso', warmup: 'Riscaldamento spalle/scapole e serie di avvicinamento ai fondamentali', exercises: [
+      ex('Panca Piana Bilanciere', 3, '5-7 + 8-10', '2′30″-4′', 'Top set + Back off -20%', 'Top set RIR 1; back-off RIR 1-2'), ex('Rematore Bilanciere', 3, '6-8 + 8-10', '2′30″-4′', 'Top set + Back off -20%', 'Progressive overload senza perdere controllo'), ex('Distensioni Manubri Inclinata', 3, '8-12', '90″-2′'), ex('Lat Pulldown / Iliac Pulldown', 3, '8-12', '90″-2′'), ex('Alzate Laterali Cavo', 4, '12-20', '60″-90″', 'Cluster', 'Cluster solo se la tecnica resta pulita'), ex('Curl Scott', 3, '8-12', '60″-90″'), ex('Push Down Cavo', 3, '10-15', '60″-90″'),
+    ] },
+    { id: 'B', title: 'Lower - Quadricipiti', warmup: 'Riscaldamento anche, ginocchia e serie di avvicinamento', exercises: [
+      ex('Leg Extension', 3, '10-15', '60″-90″', 'Ramping', 'Ultima serie a cedimento tecnico'), ex('Leg Press 45°', 3, '8-12', '2′-3′', 'Top set + Back off -20%'), ex('Hack Squat / Belt Squat', 3, '6-10', '2′-3′', 'Classico', 'RIR 1-2'), ex('Bulgarian Split Squat', 2, '8-12', '90″-2′'), ex('Leg Curl Seduto', 3, '10-15', '60″-90″'), ex('Calf Raise', 4, '8-12', '60″-90″', 'Classico', 'Pausa in allungamento'), ex('Crunch Cavo', 3, '12-20', '60″-90″'),
+    ] },
+    { id: 'C', title: 'Upper forza - Trazioni + Dip', warmup: 'Riscaldamento spalle/scapole e serie di avvicinamento', exercises: [
+      ex('Trazioni Zavorrate', 3, '5-8', '2′30″-4′', 'Classico', 'Aumenta la zavorra dopo 8/8/8 pulite'), ex('Dip Zavorrati', 3, '6-8 + 8-10', '2′30″-4′', 'Top set + Back off -20%'), ex('Chest-Supported Row', 3, '8-12', '90″-2′'), ex('Panca Inclinata Smith', 3, '8-10', '2′-3′', 'Classico', 'RIR 1-2'), ex('Lat Machine Presa Neutra', 2, '10-15', '90″'), ex('Reverse Cross / Pec Deck Inversa', 4, '12-20', '60″-90″'), ex('French Press Cavo', 3, '10-15', '60″-90″'), ex('Hammer Curl', 3, '10-15', '60″-90″'),
+    ] },
+    { id: 'D', title: 'Lower - Femorali', warmup: 'Riscaldamento anche, femorali e serie di avvicinamento', exercises: [
+      ex('Romanian Deadlift', 3, '6-8 + 8-10', '2′30″-4′', 'Top set + Back off -20%', 'Schiena neutra e femorali sotto tensione'), ex('Leg Curl Seduto', 4, '8-12', '60″-90″', 'Cluster', 'Cluster opzionale nell’ultima serie'), ex('Leg Curl Prono', 3, '10-15', '60″-90″'), ex('Glute Ham Raise / Nordic Assistito', 3, '6-10', '90″-2′'), ex('Back Extension Bias Femorali', 2, '10-15', '90″'), ex('Calf Raise', 4, '8-12', '60″-90″', 'Classico', 'Pausa in allungamento'), ex('Ab Wheel / Crunch', 3, '8-15', '60″-90″'),
+    ] },
+    { id: 'E', title: 'Upper - Specializzazione Spalle + Braccia', warmup: 'Riscaldamento cuffia, scapole e serie di avvicinamento', exercises: [
+      ex('Shoulder Press Manubri / Smith', 3, '6-10', '2′-3′', 'Top set + Back off -20%', 'RIR 1-2, niente compensi lombari'), ex('Alzate Laterali Macchina', 4, '12-20', '60″-90″'), ex('Alzate Laterali Cavo Unilaterali', 3, '15-25', '60″-90″', 'Cluster'), ex('Reverse Cross / Rear Delt Row', 3, '15-20', '60″-90″'), ex('Curl Inclinato Manubri', 3, '8-12', '60″-90″'), ex('Curl Scott Machine', 3, '10-15', '60″-90″'), ex('Estensioni Tricipiti sopra la testa al Cavo', 3, '10-15', '60″-90″'), ex('Push Down Corda', 3, '12-20', '60″-90″'), ex('Face Pull', 2, '15-20', '60″-90″'),
+    ] },
+  ],
+});
+globalThis.IronlogLogic.fiveDayTrainingProgram = fiveDayTrainingProgram();
+
 const initialProgram = () => ({
   id: 'mesociclo-2', name: '2° Mesociclo - 5 Split', duration: '10-12 settimane', workouts: [
     { id: 'A', title: 'Pettorali, Spalle e Braccia', warmup: '10′: tapis roulant, mobilità bacino/ginocchia, foam roller', exercises: [
@@ -84,7 +105,7 @@ const initialProgram = () => ({
   ],
 });
 
-const defaultState = () => ({ programs: [cutTrainingProgram()], activeProgramId: 'cut-4-split', activeWorkoutId: 'A', selectedDate: new Date().toISOString().slice(0, 10), logs: [], checkIns: [], view: 'train', cut4MigrationDone: true });
+const defaultState = () => ({ programs: [fiveDayTrainingProgram(), cutTrainingProgram()], activeProgramId: 'bulk-5-split', activeWorkoutId: 'A', selectedDate: new Date().toISOString().slice(0, 10), logs: [], checkIns: [], view: 'train', cut4MigrationDone: true, bulk5MigrationDone: true });
 let state;
 try { state = normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState()); } catch { state = defaultState(); }
 const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -94,6 +115,10 @@ if (!state.cut4MigrationDone) {
   if (oldIndex >= 0 && hasOldLogs) state.programs[oldIndex].name = 'Archivio - 2° Mesociclo 5 Split';
   if (oldIndex >= 0 && !hasOldLogs) state.programs.splice(oldIndex, 1);
   state.programs.unshift(cutTrainingProgram()); state.activeProgramId = 'cut-4-split'; state.activeWorkoutId = 'A'; state.cut4MigrationDone = true; save();
+}
+if (!state.bulk5MigrationDone) {
+  if (!state.programs.some((program) => program.id === 'bulk-5-split')) state.programs.unshift(fiveDayTrainingProgram());
+  state.activeProgramId = 'bulk-5-split'; state.activeWorkoutId = 'A'; state.bulk5MigrationDone = true; save();
 }
 const activeProgram = () => state.programs.find((p) => p.id === state.activeProgramId) ?? state.programs[0];
 const activeWorkout = () => activeProgram().workouts.find((w) => w.id === state.activeWorkoutId) ?? activeProgram().workouts[0];
@@ -224,7 +249,8 @@ async function exportWeeklyCheckIn(weekKey, mode) {
 
 function renderManage() {
   const program = activeProgram();
-  $('#content').innerHTML = `<section class="page-head"><p class="eyebrow">EDITOR</p><h1>Le tue schede</h1><p>Modifica senza perdere il tuo logbook.</p></section><div class="program-actions"><button class="primary" id="new-program">+ Nuovo programma</button><button class="secondary" id="export-data">Esporta backup</button><label class="secondary import">Importa<input type="file" accept="application/json" id="import-data"></label></div>${program.workouts.map((workout) => `<article class="manage-workout"><header><div><span class="workout-letter">${workout.id}</span><input class="workout-title" data-workout-title="${workout.id}" value="${esc(workout.title)}"></div><button class="add-exercise" data-add-exercise="${workout.id}">+ esercizio</button></header>${workout.exercises.map((e) => `<div class="edit-exercise"><input data-edit="name" data-w="${workout.id}" data-e="${e.id}" value="${esc(e.name)}"><input data-edit="sets" data-w="${workout.id}" data-e="${e.id}" type="number" min="1" value="${e.sets}" aria-label="Serie"><input data-edit="reps" data-w="${workout.id}" data-e="${e.id}" value="${esc(e.reps)}" aria-label="Ripetizioni"><select data-edit="method" data-w="${workout.id}" data-e="${e.id}">${['Classico','Top set + Back off -20%','Ramping','Cluster','Superset','Compound set','Metabolico','Rest pause'].map((m) => `<option ${m === e.method ? 'selected' : ''}>${m}</option>`).join('')}</select><input data-edit="rest" data-w="${workout.id}" data-e="${e.id}" value="${esc(e.rest)}" aria-label="Recupero"><button data-delete="${e.id}" data-w="${workout.id}" aria-label="Elimina ${esc(e.name)}">×</button></div>`).join('')}</article>`).join('')}`;
+  $('#content').innerHTML = `<section class="page-head"><p class="eyebrow">EDITOR</p><h1>Le tue schede</h1><p>La scheda nuova è attiva; quella precedente resta selezionabile e conserva i suoi log.</p></section><div class="program-actions"><label class="select-label">Programma<select id="program-select">${state.programs.map((item) => `<option value="${esc(item.id)}" ${item.id === state.activeProgramId ? 'selected' : ''}>${esc(item.name)}</option>`).join('')}</select></label><button class="primary" id="new-program">+ Nuovo programma</button><button class="secondary" id="export-data">Esporta backup</button><label class="secondary import">Importa<input type="file" accept="application/json" id="import-data"></label></div>${program.workouts.map((workout) => `<article class="manage-workout"><header><div><span class="workout-letter">${workout.id}</span><input class="workout-title" data-workout-title="${workout.id}" value="${esc(workout.title)}"></div><button class="add-exercise" data-add-exercise="${workout.id}">+ esercizio</button></header>${workout.exercises.map((e) => `<div class="edit-exercise"><input data-edit="name" data-w="${workout.id}" data-e="${e.id}" value="${esc(e.name)}"><input data-edit="sets" data-w="${workout.id}" data-e="${e.id}" type="number" min="1" value="${e.sets}" aria-label="Serie"><input data-edit="reps" data-w="${workout.id}" data-e="${e.id}" value="${esc(e.reps)}" aria-label="Ripetizioni"><select data-edit="method" data-w="${workout.id}" data-e="${e.id}">${['Classico','Top set + Back off -20%','Ramping','Cluster','Superset','Compound set','Metabolico','Rest pause'].map((m) => `<option ${m === e.method ? 'selected' : ''}>${m}</option>`).join('')}</select><input data-edit="rest" data-w="${workout.id}" data-e="${e.id}" value="${esc(e.rest)}" aria-label="Recupero"><button data-delete="${e.id}" data-w="${workout.id}" aria-label="Elimina ${esc(e.name)}">×</button></div>`).join('')}</article>`).join('')}`;
+  $('#program-select').onchange = (event) => { state.activeProgramId = event.target.value; state.activeWorkoutId = 'A'; save(); renderManage(); };
   $('#new-program').onclick = newProgram; $('#export-data').onclick = exportData; $('#import-data').onchange = importData;
   document.querySelectorAll('[data-edit]').forEach((el) => el.onchange = editExercise);
   document.querySelectorAll('[data-workout-title]').forEach((el) => el.onchange = () => { program.workouts.find((w) => w.id === el.dataset.workoutTitle).title = el.value; save(); });
