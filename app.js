@@ -157,6 +157,10 @@ function renderTrain() {
   $('#workout-select').onchange = (e) => { state.activeWorkoutId = e.target.value; save(); renderTrain(); };
   $('#session-date').onchange = (e) => { state.selectedDate = e.target.value; save(); renderTrain(); };
   document.querySelectorAll('[data-copy]').forEach((button) => button.onclick = () => copyPrevious(button.dataset.copy));
+  document.querySelectorAll('[data-note-toggle]').forEach((button) => button.onclick = () => {
+    const note = document.getElementById(button.dataset.noteToggle);
+    const isOpen = !note.hidden; note.hidden = isOpen; button.setAttribute('aria-expanded', String(!isOpen));
+  });
   document.querySelectorAll('[data-log]').forEach((input) => input.onchange = () => updateLog(input.dataset.ex, Number(input.dataset.set), input.dataset.log, input.value));
 }
 
@@ -166,7 +170,10 @@ function exerciseCard(exercise, index) {
     const ghost = previous ? `${previous.weight || '—'} kg × ${previous.reps || '—'}` : 'nessun dato';
     return `<div class="set-row"><b>${setIndex + 1}</b><label><span>kg</span><input inputmode="decimal" type="number" min="0" step="0.5" value="${current?.weight || ''}" placeholder="${previous?.weight ?? '—'}" data-log="weight" data-ex="${exercise.id}" data-set="${setIndex}" aria-label="Peso serie ${setIndex + 1}"></label><label><span>rep</span><input inputmode="numeric" type="number" min="0" step="1" value="${current?.reps || ''}" placeholder="${previous?.reps ?? '—'}" data-log="reps" data-ex="${exercise.id}" data-set="${setIndex}" aria-label="Ripetizioni serie ${setIndex + 1}"></label><small class="ghost">prec. ${ghost}</small></div>`;
   }).join('');
-  return `<article class="exercise-card"><header><div><p class="exercise-number">${String(index + 1).padStart(2, '0')}</p><h2>${esc(exercise.name)}</h2>${exercise.pair ? `<p class="pair">${esc(exercise.pair.join(' + '))}</p>` : ''}</div><button class="copy" data-copy="${exercise.id}" title="Copia la prestazione precedente">Riprendi</button></header><div class="badges"><span>${esc(exercise.method)}</span><span>${exercise.sets} × ${esc(exercise.reps)}</span><span>rec. ${esc(exercise.rest)}</span></div>${exercise.note ? `<p class="note">${esc(exercise.note)}</p>` : ''}<div class="sets">${rows}</div></article>`;
+  const noteId = `note-${exercise.id}`;
+  const noteButton = exercise.note ? `<button class="note-toggle" data-note-toggle="${noteId}" aria-expanded="false" aria-controls="${noteId}" title="Apri nota esercizio">i</button>` : '';
+  const note = exercise.note ? `<p class="note exercise-note" id="${noteId}" hidden>${esc(exercise.note)}</p>` : '';
+  return `<article class="exercise-card"><header><div><p class="exercise-number">${String(index + 1).padStart(2, '0')}</p><h2>${esc(exercise.name)}</h2>${exercise.pair ? `<p class="pair">${esc(exercise.pair.join(' + '))}</p>` : ''}</div><div class="exercise-actions">${noteButton}<button class="copy" data-copy="${exercise.id}" title="Copia la prestazione precedente">Riprendi</button></div></header><div class="badges"><span>${esc(exercise.method)}</span><span>${exercise.sets} × ${esc(exercise.reps)}</span><span>rec. ${esc(exercise.rest)}</span></div>${note}<div class="sets">${rows}</div></article>`;
 }
 
 function copyPrevious(exerciseId) {
