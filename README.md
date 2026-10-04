@@ -22,6 +22,8 @@ Il deploy GitHub Pages pubblica soltanto i file dell’app: non contiene né sov
 
 La scheda attiva è **Bulk controllato - Push Pull Legs Upper Lower**: A push, B pull, C legs quadricipiti, D upper con specializzazione spalle/braccia, E lower femorali/erettori lombari. Le versioni precedenti restano selezionabili nell’editor e i loro log non vengono cancellati.
 
+Durante l’allenamento, il pulsante circolare **(i)** su ogni esercizio apre una guida rapida al metodo assegnato: classico, top set/back-off, ramping, cluster, superset, compound set, metabolico o rest-pause, oltre alla nota specifica dell’esercizio.
+
 ## Deploy
 
 Ogni push su `main` avvia il workflow GitHub Pages in `.github/workflows/deploy.yml`. Dopo il primo run, abilita GitHub Pages nelle impostazioni del repository scegliendo **GitHub Actions** come sorgente, se GitHub non lo ha già configurato automaticamente.

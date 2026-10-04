@@ -41,6 +41,21 @@ const uid = () => `x${Math.random().toString(36).slice(2, 9)}`;
 const ex = (name, sets, reps, rest, method = 'Classico', note = '') => ({ id: uid(), name, sets, reps, rest, method, note });
 const pair = (name, left, right, sets, reps, rest, note = '') => ({ id: uid(), name, sets, reps, rest, method: 'Superset', note, pair: [left, right] });
 
+const methodNotes = {
+  Classico: 'Metodo classico: usa un carico stabile nelle serie di lavoro, resta nel range indicato e chiudi di norma a RIR 1-2. Quando completi tutte le serie al limite alto con tecnica pulita, aumenta leggermente il carico.',
+  'Top set + Back off -20%': 'Dopo le serie di avvicinamento fai il top set pesante nel range indicato, a circa RIR 1. Riduci poi il carico di circa il 20% e completa i back-off mantenendo tecnica e RIR 1-2.',
+  Ramping: 'Parti più leggero e aumenta gradualmente il carico a ogni serie. Le prime serie preparano, le ultime sono quelle effettive: evita il cedimento prima dell’ultima e mantieni circa RIR 1-2.',
+  Cluster: 'Esegui la serie in mini-blocchi: fai alcune ripetizioni, riposa 10-20 secondi senza abbandonare l’attrezzo e riprendi fino a completare il totale. La pausa serve a mantenere qualità, non a trasformare la serie in recupero completo.',
+  Superset: 'Esegui il primo esercizio e passa subito al secondo con il minimo tempo necessario. Riposa solo dopo aver completato entrambi, poi ripeti per tutte le serie previste.',
+  'Compound set': 'Esegui due esercizi per lo stesso gruppo muscolare consecutivamente, senza recupero tra i due. Il recupero indicato si applica dopo la coppia completa.',
+  Metabolico: 'Usa un carico moderato, movimento controllato e recuperi brevi. Cerca tensione continua e pump; arriva vicino al cedimento solo nell’ultima serie, senza sacrificare il ROM.',
+  'Rest pause': 'Porta la serie vicino al cedimento tecnico, riposa 15-20 secondi e aggiungi 2-4 ripetizioni. Ripeti al massimo una o due mini-pause, fermandoti quando la tecnica peggiora.',
+};
+
+function exerciseInfo(exercise) {
+  return [methodNotes[exercise.method] || methodNotes.Classico, exercise.note].filter(Boolean).join(' ');
+}
+
 const cutTrainingProgram = () => ({
   id: 'cut-4-split', name: 'Cut - 4 Split', duration: 'Fase attuale', workouts: [
     { id: 'A', title: 'Upper - Panca + Dorso', warmup: 'Riscaldamento e avvicinamento progressivo ai fondamentali', exercises: [
@@ -198,8 +213,9 @@ function exerciseCard(exercise, index) {
     return `<div class="set-row"><b>${setIndex + 1}</b><label><span>kg</span><input inputmode="decimal" type="number" min="0" step="0.5" value="${current?.weight || ''}" placeholder="${previous?.weight ?? '—'}" data-log="weight" data-ex="${exercise.id}" data-set="${setIndex}" aria-label="Peso serie ${setIndex + 1}"></label><label><span>rep</span><input inputmode="numeric" type="number" min="0" step="1" value="${current?.reps || ''}" placeholder="${previous?.reps ?? '—'}" data-log="reps" data-ex="${exercise.id}" data-set="${setIndex}" aria-label="Ripetizioni serie ${setIndex + 1}"></label><small class="ghost">prec. ${ghost}</small></div>`;
   }).join('');
   const noteId = `note-${exercise.id}`;
-  const noteButton = exercise.note ? `<button class="note-toggle" data-note-toggle="${noteId}" aria-expanded="false" aria-controls="${noteId}" title="Apri nota esercizio">i</button>` : '';
-  const note = exercise.note ? `<p class="note exercise-note" id="${noteId}" hidden>${esc(exercise.note)}</p>` : '';
+  const info = exerciseInfo(exercise);
+  const noteButton = info ? `<button class="note-toggle" data-note-toggle="${noteId}" aria-expanded="false" aria-controls="${noteId}" title="Apri info su esercizio e metodo">i</button>` : '';
+  const note = info ? `<p class="note exercise-note" id="${noteId}" hidden>${esc(info)}</p>` : '';
   return `<article class="exercise-card"><header><div><p class="exercise-number">${String(index + 1).padStart(2, '0')}</p><h2>${esc(exercise.name)}</h2>${exercise.pair ? `<p class="pair">${esc(exercise.pair.join(' + '))}</p>` : ''}</div><div class="exercise-actions">${noteButton}<button class="copy" data-copy="${exercise.id}" title="Copia la prestazione precedente">Riprendi</button></div></header><div class="badges"><span>${esc(exercise.method)}</span><span>${exercise.sets} × ${esc(exercise.reps)}</span><span>rec. ${esc(exercise.rest)}</span></div>${note}<div class="sets">${rows}</div></article>`;
 }
 
