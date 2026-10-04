@@ -62,19 +62,19 @@ globalThis.IronlogLogic.cutTrainingProgram = cutTrainingProgram();
 const fiveDayTrainingProgram = () => ({
   id: 'bulk-5-split', name: 'Bulk controllato - 5 giorni', duration: 'Fase attuale · lun-mar-mer-ven-sab', workouts: [
     { id: 'A', title: 'Upper forza - Panca + Dorso', warmup: 'Riscaldamento spalle/scapole e serie di avvicinamento ai fondamentali', exercises: [
-      ex('Panca Piana Bilanciere', 3, '5-7 + 8-10', '2′30″-4′', 'Top set + Back off -20%', 'Top set RIR 1; back-off RIR 1-2'), ex('Rematore Bilanciere', 3, '6-8 + 8-10', '2′30″-4′', 'Top set + Back off -20%', 'Progressive overload senza perdere controllo'), ex('Distensioni Manubri Inclinata', 3, '8-12', '90″-2′'), ex('Lat Pulldown / Iliac Pulldown', 3, '8-12', '90″-2′'), ex('Alzate Laterali Cavo', 4, '12-20', '60″-90″', 'Cluster', 'Cluster solo se la tecnica resta pulita'), ex('Curl Scott', 3, '8-12', '60″-90″'), ex('Push Down Cavo', 3, '10-15', '60″-90″'),
+      ex('Panca Inclinata Smith 30°', 3, '5-7 + 8-10', '2′30″-4′', 'Top set + Back off -20%', 'Priorità parte alta; top set RIR 1, back-off RIR 1-2'), ex('Rematore Bilanciere', 3, '6-8 + 8-10', '2′30″-4′', 'Top set + Back off -20%', 'Centro schiena; progressione senza perdere controllo'), ex('Panca Piana Bilanciere', 3, '6-8', '2′30″-4′', 'Classico', 'Forza e volume generale del petto'), ex('Lat Pulldown / Iliac Pulldown', 3, '8-12', '90″-2′', 'Classico', 'Gran dorsale; allungamento controllato'), ex('Croci Cavo basso-alto', 2, '10-15', '60″-90″', 'Classico', 'Chiusura verso la parte alta del petto'), ex('Alzate Laterali Cavo', 4, '12-20', '60″-90″', 'Cluster', 'Cluster solo se la tecnica resta pulita'), ex('Curl Scott', 3, '8-12', '60″-90″'), ex('Push Down Cavo', 3, '10-15', '60″-90″'),
     ] },
     { id: 'B', title: 'Lower - Quadricipiti', warmup: 'Riscaldamento anche, ginocchia e serie di avvicinamento', exercises: [
       ex('Leg Extension', 3, '10-15', '60″-90″', 'Ramping', 'Ultima serie a cedimento tecnico'), ex('Leg Press 45°', 3, '8-12', '2′-3′', 'Top set + Back off -20%'), ex('Hack Squat / Belt Squat', 3, '6-10', '2′-3′', 'Classico', 'RIR 1-2'), ex('Bulgarian Split Squat', 2, '8-12', '90″-2′'), ex('Leg Curl Seduto', 3, '10-15', '60″-90″'), ex('Calf Raise', 4, '8-12', '60″-90″', 'Classico', 'Pausa in allungamento'), ex('Crunch Cavo', 3, '12-20', '60″-90″'),
     ] },
     { id: 'C', title: 'Upper forza - Trazioni + Dip', warmup: 'Riscaldamento spalle/scapole e serie di avvicinamento', exercises: [
-      ex('Trazioni Zavorrate', 3, '5-8', '2′30″-4′', 'Classico', 'Aumenta la zavorra dopo 8/8/8 pulite'), ex('Dip Zavorrati', 3, '6-8 + 8-10', '2′30″-4′', 'Top set + Back off -20%'), ex('Chest-Supported Row', 3, '8-12', '90″-2′'), ex('Panca Inclinata Smith', 3, '8-10', '2′-3′', 'Classico', 'RIR 1-2'), ex('Lat Machine Presa Neutra', 2, '10-15', '90″'), ex('Reverse Cross / Pec Deck Inversa', 4, '12-20', '60″-90″'), ex('French Press Cavo', 3, '10-15', '60″-90″'), ex('Hammer Curl', 3, '10-15', '60″-90″'),
+      ex('Trazioni Zavorrate', 3, '5-8', '2′30″-4′', 'Classico', 'Gran dorsale; aumenta la zavorra dopo 8/8/8 pulite'), ex('Dip Zavorrati', 3, '6-8 + 8-10', '2′30″-4′', 'Top set + Back off -20%', 'RIR 1-2'), ex('Chest-Supported Row', 3, '8-12', '90″-2′', 'Classico', 'Centro schiena, gomiti controllati'), ex('Panca Inclinata Manubri', 3, '8-12', '2′-3′', 'Classico', 'Secondo richiamo parte alta del petto'), ex('Lat Machine Presa Neutra', 2, '10-15', '90″', 'Classico', 'Gran dorsale senza slancio'), ex('Cable Row Presa Larga', 2, '10-15', '90″', 'Classico', 'Centro schiena e retrazione scapolare'), ex('Reverse Cross / Pec Deck Inversa', 4, '12-20', '60″-90″'), ex('French Press Cavo', 3, '10-15', '60″-90″'), ex('Hammer Curl', 3, '10-15', '60″-90″'),
     ] },
     { id: 'D', title: 'Lower - Femorali', warmup: 'Riscaldamento anche, femorali e serie di avvicinamento', exercises: [
-      ex('Romanian Deadlift', 3, '6-8 + 8-10', '2′30″-4′', 'Top set + Back off -20%', 'Schiena neutra e femorali sotto tensione'), ex('Leg Curl Seduto', 4, '8-12', '60″-90″', 'Cluster', 'Cluster opzionale nell’ultima serie'), ex('Leg Curl Prono', 3, '10-15', '60″-90″'), ex('Glute Ham Raise / Nordic Assistito', 3, '6-10', '90″-2′'), ex('Back Extension Bias Femorali', 2, '10-15', '90″'), ex('Calf Raise', 4, '8-12', '60″-90″', 'Classico', 'Pausa in allungamento'), ex('Ab Wheel / Crunch', 3, '8-15', '60″-90″'),
+      ex('Romanian Deadlift', 3, '6-8 + 8-10', '2′30″-4′', 'Top set + Back off -20%', 'Femorali + erettori lombari; schiena neutra'), ex('Leg Curl Seduto', 4, '8-12', '60″-90″', 'Cluster', 'Femorali; cluster opzionale nell’ultima serie'), ex('Leg Curl Prono', 3, '10-15', '60″-90″'), ex('Glute Ham Raise / Nordic Assistito', 3, '6-10', '90″-2′'), ex('Back Extension 45°', 3, '10-15', '90″', 'Classico', 'Erettori lombari + femorali, senza iperestendere'), ex('Calf Raise', 3, '8-12', '60″-90″', 'Classico', 'Volume ridotto: solo 3 serie settimanali'), ex('Ab Wheel / Crunch', 3, '8-15', '60″-90″'),
     ] },
     { id: 'E', title: 'Upper - Specializzazione Spalle + Braccia', warmup: 'Riscaldamento cuffia, scapole e serie di avvicinamento', exercises: [
-      ex('Shoulder Press Manubri / Smith', 3, '6-10', '2′-3′', 'Top set + Back off -20%', 'RIR 1-2, niente compensi lombari'), ex('Alzate Laterali Macchina', 4, '12-20', '60″-90″'), ex('Alzate Laterali Cavo Unilaterali', 3, '15-25', '60″-90″', 'Cluster'), ex('Reverse Cross / Rear Delt Row', 3, '15-20', '60″-90″'), ex('Curl Inclinato Manubri', 3, '8-12', '60″-90″'), ex('Curl Scott Machine', 3, '10-15', '60″-90″'), ex('Estensioni Tricipiti sopra la testa al Cavo', 3, '10-15', '60″-90″'), ex('Push Down Corda', 3, '12-20', '60″-90″'), ex('Face Pull', 2, '15-20', '60″-90″'),
+      ex('Shoulder Press Manubri / Smith', 3, '6-10', '2′-3′', 'Top set + Back off -20%', 'RIR 1-2, niente compensi lombari'), ex('Alzate Laterali Macchina', 4, '12-20', '60″-90″'), ex('Alzate Laterali Cavo Unilaterali', 3, '15-25', '60″-90″', 'Cluster'), ex('Reverse Cross / Rear Delt Row', 3, '15-20', '60″-90″'), ex('Croci Cavo basso-alto', 2, '10-15', '60″-90″', 'Classico', 'Richiamo parte alta del petto senza stressare le spalle'), ex('Curl Inclinato Manubri', 3, '8-12', '60″-90″'), ex('Curl Scott Machine', 3, '10-15', '60″-90″'), ex('Estensioni Tricipiti sopra la testa al Cavo', 3, '10-15', '60″-90″'), ex('Push Down Corda', 3, '12-20', '60″-90″'), ex('Face Pull', 2, '15-20', '60″-90″'),
     ] },
   ],
 });
@@ -105,7 +105,7 @@ const initialProgram = () => ({
   ],
 });
 
-const defaultState = () => ({ programs: [fiveDayTrainingProgram(), cutTrainingProgram()], activeProgramId: 'bulk-5-split', activeWorkoutId: 'A', selectedDate: new Date().toISOString().slice(0, 10), logs: [], checkIns: [], view: 'train', cut4MigrationDone: true, bulk5MigrationDone: true });
+const defaultState = () => ({ programs: [fiveDayTrainingProgram(), cutTrainingProgram()], activeProgramId: 'bulk-5-split', activeWorkoutId: 'A', selectedDate: new Date().toISOString().slice(0, 10), logs: [], checkIns: [], view: 'train', cut4MigrationDone: true, bulk5MigrationDone: true, balanced5MigrationDone: true });
 let state;
 try { state = normalizeState(JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultState()); } catch { state = defaultState(); }
 const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -119,6 +119,11 @@ if (!state.cut4MigrationDone) {
 if (!state.bulk5MigrationDone) {
   if (!state.programs.some((program) => program.id === 'bulk-5-split')) state.programs.unshift(fiveDayTrainingProgram());
   state.activeProgramId = 'bulk-5-split'; state.activeWorkoutId = 'A'; state.bulk5MigrationDone = true; save();
+}
+if (!state.balanced5MigrationDone) {
+  const previousFiveDay = state.programs.find((program) => program.id === 'bulk-5-split');
+  if (previousFiveDay) { previousFiveDay.id = 'bulk-5-split-v1'; previousFiveDay.name = 'Archivio - Bulk controllato v1'; }
+  state.programs.unshift(fiveDayTrainingProgram()); state.activeProgramId = 'bulk-5-split'; state.activeWorkoutId = 'A'; state.balanced5MigrationDone = true; save();
 }
 const activeProgram = () => state.programs.find((p) => p.id === state.activeProgramId) ?? state.programs[0];
 const activeWorkout = () => activeProgram().workouts.find((w) => w.id === state.activeWorkoutId) ?? activeProgram().workouts[0];
