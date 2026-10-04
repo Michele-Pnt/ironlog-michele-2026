@@ -22,7 +22,7 @@ Il deploy GitHub Pages pubblica soltanto i file dell’app: non contiene né sov
 
 La scheda attiva è **Bulk controllato - Push Pull Legs Upper Lower**: A push, B pull, C legs quadricipiti, D upper con specializzazione spalle/braccia, E lower femorali/erettori lombari. Le versioni precedenti restano selezionabili nell’editor e i loro log non vengono cancellati.
 
-Durante l’allenamento, il pulsante circolare **(i)** su ogni esercizio apre una guida rapida al metodo assegnato: classico, top set/back-off, ramping, cluster, superset, compound set, metabolico o rest-pause, oltre alla nota specifica dell’esercizio.
+Durante l’allenamento, il pulsante circolare **(i)** su ogni esercizio apre una guida contestuale al metodo assegnato: serie prescritte, RIR, recuperi, top set/back-off, ramping, cluster, superset, compound set, metabolico o rest-pause, oltre alla nota specifica. In questa risalita dal cut non si aggiungono serie automaticamente: il volume si modifica solo dopo il check-in, se recupero e performance lo permettono.
 
 ## Deploy
 

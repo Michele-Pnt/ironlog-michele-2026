@@ -42,18 +42,19 @@ const ex = (name, sets, reps, rest, method = 'Classico', note = '') => ({ id: ui
 const pair = (name, left, right, sets, reps, rest, note = '') => ({ id: uid(), name, sets, reps, rest, method: 'Superset', note, pair: [left, right] });
 
 const methodNotes = {
-  Classico: 'Metodo classico: usa un carico stabile nelle serie di lavoro, resta nel range indicato e chiudi di norma a RIR 1-2. Quando completi tutte le serie al limite alto con tecnica pulita, aumenta leggermente il carico.',
-  'Top set + Back off -20%': 'Dopo le serie di avvicinamento fai il top set pesante nel range indicato, a circa RIR 1. Riduci poi il carico di circa il 20% e completa i back-off mantenendo tecnica e RIR 1-2.',
-  Ramping: 'Parti più leggero e aumenta gradualmente il carico a ogni serie. Le prime serie preparano, le ultime sono quelle effettive: evita il cedimento prima dell’ultima e mantieni circa RIR 1-2.',
-  Cluster: 'Esegui la serie in mini-blocchi: fai alcune ripetizioni, riposa 10-20 secondi senza abbandonare l’attrezzo e riprendi fino a completare il totale. La pausa serve a mantenere qualità, non a trasformare la serie in recupero completo.',
-  Superset: 'Esegui il primo esercizio e passa subito al secondo con il minimo tempo necessario. Riposa solo dopo aver completato entrambi, poi ripeti per tutte le serie previste.',
-  'Compound set': 'Esegui due esercizi per lo stesso gruppo muscolare consecutivamente, senza recupero tra i due. Il recupero indicato si applica dopo la coppia completa.',
-  Metabolico: 'Usa un carico moderato, movimento controllato e recuperi brevi. Cerca tensione continua e pump; arriva vicino al cedimento solo nell’ultima serie, senza sacrificare il ROM.',
-  'Rest pause': 'Porta la serie vicino al cedimento tecnico, riposa 15-20 secondi e aggiungi 2-4 ripetizioni. Ripeti al massimo una o due mini-pause, fermandoti quando la tecnica peggiora.',
+  Classico: 'Metodo classico: usa un carico stabile nelle serie di lavoro, resta nel range indicato e chiudi di norma a RIR 1-2. Nella fase attuale fai solo le serie prescritte: aumenteremo il volume soltanto se il check-in mostra recupero e performance solidi.',
+  'Top set + Back off -20%': 'Dopo le serie di avvicinamento fai il top set pesante nel range indicato, a circa RIR 1. Riduci poi il carico di circa il 20% e completa i back-off a RIR 1-2: questo è già il volume completo della seduta, non aggiungere serie.',
+  Ramping: 'Parti più leggero e aumenta gradualmente il carico a ogni serie. Le prime serie preparano ma devono restare tecniche; l’ultima è la più impegnativa, senza cedimento anticipato. Non aggiungere serie per cercare più volume.',
+  Cluster: 'Esegui la serie in mini-blocchi: fai alcune ripetizioni, riposa 10-20 secondi senza abbandonare l’attrezzo e riprendi fino a completare il totale. È un modo per mantenere qualità nel volume prescritto, non un motivo per aggiungere serie.',
+  Superset: 'Esegui il primo esercizio e passa subito al secondo con il minimo tempo necessario. Riposa solo dopo aver completato entrambi, poi ripeti per tutte le serie previste: la coppia conta come volume di entrambi gli esercizi.',
+  'Compound set': 'Esegui due esercizi per lo stesso gruppo muscolare consecutivamente, senza recupero tra i due. Il recupero indicato si applica dopo la coppia completa e non si aggiungono serie oltre a quelle programmate.',
+  Metabolico: 'Usa un carico moderato, movimento controllato e recuperi brevi. Cerca tensione continua e pump; arriva vicino al cedimento solo nell’ultima serie. Il volume resta quello prescritto, perché il costo di fatica è già alto.',
+  'Rest pause': 'Porta la serie vicino al cedimento tecnico, riposa 15-20 secondi e aggiungi 2-4 ripetizioni. Ripeti al massimo una o due mini-pause: è intensità dentro la serie, non volume extra da replicare.',
 };
 
 function exerciseInfo(exercise) {
-  return [methodNotes[exercise.method] || methodNotes.Classico, exercise.note].filter(Boolean).join(' ');
+  const prescribed = `${exercise.sets} serie prescritte nella seduta.`;
+  return [prescribed, methodNotes[exercise.method] || methodNotes.Classico, exercise.note].filter(Boolean).join(' ');
 }
 
 const cutTrainingProgram = () => ({
